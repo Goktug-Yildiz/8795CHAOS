@@ -6,13 +6,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import com.ctre.phoenix6.hardware.CANcoder;
 
 //Dosyanın içindekiler:
 //Drive Motor
@@ -23,20 +24,26 @@ class swerveModule{
     //Drive Motor
     SparkMax driveMotor;
     SparkMax steeringMotor;
+
+    //Modül durumları
     private SwerveModuleState currentState;
+    //Encoder
+    CANcoder m_drivingCANcoder;
+    CANcoder m_steeringCANCoder;
 
     //2 Tane PID controller kullanımı
     //1 tanesi sürüş için 1 tanesi de açı hesaplayabilmesi için
     PIDController drivePIDController;
     PIDController steeringPIDController;
 
+    double m_chassisAngularOffset = 0;
 
-    public swerveModule(
-        int driveMotorPort,
-        int steeringMotorPort
-    ){
+
+    public swerveModule(int driveMotorPort,int steeringMotorPort){
         System.out.println("swerve");
         driveMotor = new SparkMax(driveMotorPort, MotorType.kBrushless);
+        
+        
         steeringMotor = new SparkMax(steeringMotorPort, MotorType.kBrushless);
         currentState = new SwerveModuleState();
 
@@ -51,6 +58,7 @@ class swerveModule{
     public void setDesiredState(SwerveModuleState newState) {
         currentState = newState;
     }
+
 }
 
 
